@@ -40,9 +40,14 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Build and Install Project
-        run: mvn clean install -DskipTests -Ddockerfile.skip=true -Dlicense.skip=true -Dcheckstyle.skip=true -Dskip.js=true -T 2C
+      # Étape 3a : Compiler UNIQUEMENT le backend (application) et ses dépendances
+      # -pl application : focus sur le module principal
+      # -am : (also make) compile les dépendances nécessaires
+      # Les skips évitent les erreurs de docker, licence, checkstyle et frontend
+      - name: Build Application Module Only
+        run: mvn clean install -pl application -am -DskipTests -Ddockerfile.skip=true -Dlicense.skip=true -Dcheckstyle.skip=true -Dskip.js=true -T 2C
 
+      # Étape 3b : Exécuter uniquement le test BonusIntegrationTest
       - name: Run BonusIntegrationTest
         run: mvn -pl application test -Dtest=BonusIntegrationTest
 

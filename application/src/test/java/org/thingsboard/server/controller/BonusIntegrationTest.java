@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,10 +27,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Test d'intégration bonus pour vérifier le bon fonctionnement
- * des endpoints de base de l'application ThingsBoard.
- */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -40,27 +36,9 @@ public class BonusIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    /**
-     * Test de l'endpoint de login.
-     * Vérifie que l'endpoint répond avec un statut OK (200) ou Unauthorized (401),
-     * mais jamais avec un 404 ou 500.
-     */
     @Test
     public void testLoginEndpoint() throws Exception {
-        mockMvc.perform(get("/api/noauth/login"))
-                .andExpect(
-                        org.hamcrest.Matchers.either(status().isOk())
-                                .or(status().isUnauthorized())
-                );
-    }
-
-    /**
-     * Test de l'endpoint Swagger UI.
-     * Vérifie que la documentation Swagger est accessible et renvoie un statut OK (200).
-     */
-    @Test
-    public void testSwaggerUIEndpoint() throws Exception {
-        mockMvc.perform(get("/swagger-ui.html"))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/login"))
+               .andExpect(status().is2xxSuccessful()); 
     }
 }

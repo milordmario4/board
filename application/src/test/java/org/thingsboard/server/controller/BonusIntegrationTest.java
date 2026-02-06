@@ -16,32 +16,23 @@
 package org.thingsboard.server.controller;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
+import org.thingsboard.server.dao.service.DaoSqlTest;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test d'Aptitude Fonctionnelle (Functional Suitability)
  * Objectif : Vérifier que le système de sécurité répond correctement
  */
-@RunWith(SpringRunner.class)
-@WebMvcTest
-public class BonusIntegrationTest {
-
-    @Autowired
-    private MockMvc mockMvc;
+@DaoSqlTest
+public class BonusIntegrationTest extends AbstractControllerTest {
 
     @Test
-    public void testLoginEndpoint() throws Exception {
-        // On vérifie que l'endpoint de login répond
-        // On s'attend à une erreur 4xx (probablement 405 Method Not Allowed 
-        // ou 401 Unauthorized) car GET n'est pas la bonne méthode pour login
-        mockMvc.perform(get("/api/auth/login"))
-               .andExpect(status().is4xxClientError());
+    public void testAuthEndpointResponds() throws Exception {
+        // Test de Functional Suitability ISO/IEC 25010
+        // On vérifie que l'endpoint d'authentification répond
+        // Sans authentification, on doit recevoir 401 Unauthorized
+        doGet("/api/auth/user")
+                .andExpect(status().isUnauthorized());
     }
 }

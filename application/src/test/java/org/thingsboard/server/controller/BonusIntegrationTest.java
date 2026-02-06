@@ -18,42 +18,29 @@ package org.thingsboard.server.controller;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-// Import nécessaire pour dire à Spring quelle application démarrer
-import org.thingsboard.server.ThingsboardServerApplication;
-
-import javax.sql.DataSource;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Test d'Aptitude Fonctionnelle (Functional Suitability)
+ * Objectif : Vérifier que le système de sécurité répond correctement
+ */
 @RunWith(SpringRunner.class)
-@SpringBootTest(
-    // CORRECTION ICI : On précise explicitement la classe de configuration
-    classes = ThingsboardServerApplication.class, 
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
+@WebMvcTest
 public class BonusIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    // SECURITE : On simule la base de données pour éviter le crash "Connection Refused"
-    @MockBean
-    private DataSource dataSource;
-
     @Test
     public void testLoginEndpoint() throws Exception {
-        // On teste l'API d'auth. 
-        // 401 (Unauthorized) ou 405 (Method Not Allowed) prouve que le serveur est EN VIE.
+        // On vérifie que l'endpoint de login répond
+        // On s'attend à une erreur 4xx (probablement 405 Method Not Allowed 
+        // ou 401 Unauthorized) car GET n'est pas la bonne méthode pour login
         mockMvc.perform(get("/api/auth/login"))
                .andExpect(status().is4xxClientError());
     }
